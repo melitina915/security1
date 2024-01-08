@@ -1,4 +1,5 @@
 // 시큐리티 회원가입
+// 시큐리티 로그인
 
 package com.meli.security1.model;
 
@@ -25,6 +26,8 @@ public class User {
     private String email;
     private String role;
     // ROLE_USER, ROLE_ADMIN
+    //private Timestamp loginDate;
+    // 위와 같이 설정하여 로그인 할 때마다 날짜를 갱신해볼 수 있다.
     @CreationTimestamp
     private Timestamp createDate;
 }

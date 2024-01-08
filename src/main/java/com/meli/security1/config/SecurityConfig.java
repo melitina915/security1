@@ -1,4 +1,5 @@
 // 시큐리티 회원가입
+// 시큐리티 로그인
 
 package com.meli.security1.config;
 
@@ -48,6 +49,10 @@ public class SecurityConfig {
                                 // /user로 가면 인증해야한다는 의미
                                 // http://localhost:8080/user로 가면
                                 // 자동으로 http://localhost:8080/loginForm 주소로 보내진다
+                                // .authenticated() : 인증만 하면 들어갈 수 있는 주소
+                                // ROLE_USER를 가지고 있는 사용자가
+                                // localhost:8080/manager 또는 localhost:8080/admin으로 가려고 하면
+                                // 권한이 없기 때문에 접근할 수 없게 된다.
                                 .requestMatchers("/manager/**").hasAnyRole("ADMIN", "MANAGER")
                                 // /manager로 가면 ROLE_ADMIN 권한과 ROLE_MANAGER 권한이 있어야 한다는 의미
                                 // http://localhost:8080/manager로 가면
@@ -61,6 +66,20 @@ public class SecurityConfig {
                         formLogin
                                 .loginPage("/loginForm")
                                 // /loginForm으로 이동
+                                //.usernameParameter("프론트에서 설정한 name")
+                                // PrincipalDetailsService의 loadUserByUsername에서의
+                                // 매개변수 이름을 프론트에서 설정한 name과 다르게 하려면
+                                // SecurityConfig.java의 filterChain에서
+                                // .usernameParameter("프론트에서 설정한 name")로 설정해줘야 한다.
+                                .loginProcessingUrl("/login")
+                                // /login 주소가 호출되면 시큐리티가 낚아채서 대신 로그인을 진행해준다.
+                                // 시큐리티가 대신 진행해 주기 때문에 Controller에 /login을 만들지 않아도 된다.
+                                .defaultSuccessUrl("/")
+                                // 로그인에 성공한 다음에는 메인 페이지로 이동하도록 설정해준다.
+                                // 또한 localhost:8080/logout 한 다음 localhost:8080/user를 실행하면
+                                // 로그인 창으로 가게 되는게 로그인하면 localhost:8080/user로 가준다.
+                                // 즉 별 입력이 없었으면 default인 메인 페이지로 보내주지만,
+                                // 특정 페이지를 입력하면 로그인 한 뒤 해당 페이지로 보내준다는 것이다.
                 );
 
         return http.build();
