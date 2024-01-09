@@ -16,6 +16,18 @@ spring:
     username: melitina915
     password: PeachPotato1119!
 
+    # 구글 로그인 준비
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 545027299948-1ldek1h2ul8ubbntl3128qkc5fd1pbhq.apps.googleusercontent.com
+            client-secret: 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
+            scope:
+              - email
+              - profile
+
 
 
 # pom.xml?? mustache? ?????? ??? ??? ??? ???? ?? ??? ????.
@@ -36,3 +48,5 @@ spring:
       naming:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
     show-sql: true
+
+

@@ -6,6 +6,8 @@ package com.meli.security1.controller;
 import com.meli.security1.model.User;
 import com.meli.security1.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -93,4 +95,32 @@ public class IndexController {
 //        return "회원가입 완료됨!";
 //    }
 
+    @Secured("ROLE_ADMIN")
+    // @Secured
+    // 특정 메서드에 간단하게 걸고싶으면 간단하게 걸 수 있다
+    // SecurityConfig.java의
+    // @EnableMethodSecurity의 securedEnabled = true와 연결
+    // ROLE 하나만 걸고싶으면 @Secured 사용,
+    // ROLE 두 개 이상 걸고싶으면 @PreAuthorize 사용
+    @GetMapping("/info")
+    public @ResponseBody String info() {
+        return "개인정보";
+    }
+
+
+    @PreAuthorize("hasRole('ROLE_MANAGER') or hasRole('ROLE_ADMIN')")
+    // @PreAuthorize()
+    // data() 메소드가 실행되기 직전에 실행된다.
+    // SecurityConfig.java의
+    // @EnableMethodSecurity의 prePostEnabled = true와 연결
+    // ROLE 하나만 걸고싶으면 @Secured 사용,
+    // ROLE 두 개 이상 걸고싶으면 @PreAuthorize 사용
+    // 위 두 개의 권한(ROLE)을 갖고 있으면
+    // localhost:8080/data 접근 가능
+    // @PostAuthorize()
+    // 위 어노테이션은 data() 메소드가 실행된 후 실행된다.
+    @GetMapping("/data")
+    public @ResponseBody String data() {
+        return "데이터정보";
+    }
 }
