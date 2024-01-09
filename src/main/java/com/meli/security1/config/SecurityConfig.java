@@ -2,9 +2,25 @@
 // 시큐리티 로그인
 // 시큐리티 권한처리
 // 구글 로그인 준비
+// 구글 회원 프로필 정보 받아보기
+// Authentication 객체가 가질 수 있는 2가지 타입
 
 package com.meli.security1.config;
 
+// 1. 코드 받기 (인증이 되었다)
+// 코드를 받았다는 것은 구글 로그인이 되어 정상적으로 인증됐다는 의미
+// 2. 엑세스 토큰 (권한)
+// 코드를 통해서 엑세스 토큰을 받으면 시큐리티 서버가 구글의 사용자 정보에 접근할 수 있는 권한이 생긴다.
+// 3. 사용자 프로필 정보 가져오기
+// 4-1. 해당 정보를 토대로 회원가입을 자동으로 진행시키기도 한다.
+// 4-2. (이메일, 전화번호, 이름, 아이디) : 기본적인 정보
+// 쇼핑몰 -> 집 주소
+// 백화점몰 -> VIP 등급, 일반 등급
+// 위와 같은 경우에는 추가적인 정보가 필요하기 때문에 추가적인 회원가입을 진행한다.
+// 추가적인 정보 없이 기본적인 정보만 필요하다면 자동으로 회원가입을 진행할 수 있다.
+
+import com.meli.security1.config.oauth.PrincipalOauth2UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -28,6 +44,9 @@ import org.springframework.security.web.SecurityFilterChain;
 // postAuthorize 어노테이션(@postAuthorize) 활성화
 //public class SecurityConfig extends WebSecurityConfigurerAdapter {
 public class SecurityConfig {
+
+    @Autowired
+    private PrincipalOauth2UserService principalOauth2UserService;
 
     // 패스워드 암호화하는 빈 등록
     // 해당 메서드의 리턴되는 오브젝트를 IoC(빈)로 등록해준다.
@@ -106,7 +125,17 @@ public class SecurityConfig {
                         oauth2
                                 .loginPage("/loginForm")
                                 // 인증이 필요하면 무조건 .loginPage() 안의 URL로 이동하게 되어있다.
+                                .userInfoEndpoint(userInfoEndpointConfig ->
                                 // 구글 로그인이 완료된 뒤의 후처리가 필요함.
+                                // 구글 로그인이 되면 코드를 받는 것이 아니라 엑세스 토큰 + 사용자 프로필 정보를 한 번에 받게 된다.
+                                // 때문에 AuthClient 관련 라이브러리가 굉장히 편리하다
+                                        userInfoEndpointConfig
+                                                .userService(principalOauth2UserService))
+                                                // .userService()에 넣어줄 타입이 OAuth2UserService가 돼야 한다.
+                                                // 이를 PrincipalOauth2UserService.java에 만들어준다.
+                                                // 이렇게 구글 로그인을 통해 보낸 엑세스 토큰 + 사용자 프로필 정보들이
+                                                // PrincipalOauth2UserService.java의 loadUser 함수의 매개변수 userRequest에 리턴된다.
+
                 );
 
         return http.build();

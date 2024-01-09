@@ -1,4 +1,6 @@
 // 시큐리티 로그인
+// Authentication 객체가 가질 수 있는 2가지 타입
+// 구글 로그인 및 자동 회원가입 진행 완료
 
 package com.meli.security1.config.auth;
 
@@ -30,6 +32,7 @@ public class PrincipalDetailsService implements UserDetailsService {
     // 따라서 해당 UserDetails가 Authentication 내부로 들어가고
     // session 내부에는 이를 담은 Authentication이 들어간다.
     // 이렇게 되면 로그인이 완료된다.
+    // 함수 종료 시 @AuthenticationPrincipal 어노테이션이 만들어진다.
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
     // loginForm.html에서 name="username"으로 했기 때문에
@@ -49,9 +52,9 @@ public class PrincipalDetailsService implements UserDetailsService {
         if (userEntity != null) {
             return new PrincipalDetails(userEntity);
             // PrincipalDetails 안에 꼭 user 오브젝트를 넣어줘야 한다.
+            // loadUserByUsername이 리턴될 때 PrincipalDetails가 Authentication 객체 안에 들어간다.
         }
         // user가 없는 경우
         return null;
     }
-
 }
