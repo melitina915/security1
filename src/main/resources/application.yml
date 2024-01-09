@@ -16,7 +16,7 @@ spring:
     username: melitina915
     password: PeachPotato1119!
 
-    # 구글 로그인 준비
+  # 구글 로그인 준비
   security:
     oauth2:
       client:

@@ -1,5 +1,7 @@
 // 시큐리티 회원가입
 // 시큐리티 로그인
+// 시큐리티 권한처리
+// 구글 로그인 준비
 
 package com.meli.security1.config;
 
